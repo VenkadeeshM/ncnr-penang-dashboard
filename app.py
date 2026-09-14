@@ -9,12 +9,17 @@ st.set_page_config(page_title="NCNR Penang Cloud Dashboard", layout="wide")
 st.title("⚡ NCNR Penang Cloud Operational Dashboard")
 st.caption("🌐 Cloud Hosted | Live Multi-User Sync Enabled")
 
-# Initialize GSheets connection using Streamlit Secrets
+# Google Sheet Details
+SPREADSHEET_ID = "1QFrmA7QVnJtri5mlA6PqKsbOJrln54AvxIuoKT9hxJE"
+GID = "2052088668"
+CSV_URL = f"https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}/export?format=csv&gid={GID}"
+
+# Initialize GSheets connection for saving edits
 conn = st.connection("gsheets", type=GSheetsConnection)
 
 @st.cache_data(ttl=5)
 def load_data():
-    return conn.read(worksheet="Detail1")
+    return pd.read_csv(CSV_URL)
 
 try:
     df = load_data()
