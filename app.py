@@ -3,7 +3,7 @@ import streamlit as st
 import pandas as pd
 from streamlit_gsheets import GSheetsConnection
 
-# Page Configuration (Must be called only ONCE at the top)
+# Page Configuration
 st.set_page_config(page_title="NCNR Penang Cloud Dashboard", layout="wide")
 
 st.title("⚡ NCNR Penang Cloud Operational Dashboard")
@@ -11,15 +11,14 @@ st.caption("🌐 Cloud Hosted | Live Multi-User Sync Enabled")
 
 # Google Sheet Details
 SPREADSHEET_ID = "1ee0csLtmGCx9X9Js6Vlgmo0IxfSkZVr_"
-GID = "139417942"  # GID for Detail1 tab
-CSV_URL = f"https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}/export?format=csv&gid={GID}"
+GID = "139417942"
 
 # Initialize GSheets connection for saving edits
 conn = st.connection("gsheets", type=GSheetsConnection)
 
 @st.cache_data(ttl=5)
 def load_data():
-    return pd.read_csv(CSV_URL)
+    return conn.read(worksheet="Detail1")
 
 try:
     df = load_data()
