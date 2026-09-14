@@ -3,20 +3,30 @@ import streamlit as st
 import pandas as pd
 from streamlit_gsheets import GSheetsConnection
 
-# Page Configuration
+# Page Configuration (Must be called only ONCE at the top)
 st.set_page_config(page_title="NCNR Penang Cloud Dashboard", layout="wide")
 
 st.title("⚡ NCNR Penang Cloud Operational Dashboard")
 st.caption("🌐 Cloud Hosted | Live Multi-User Sync Enabled")
 
-# Connect to Google Sheets
+# Google Sheet Details
+SPREADSHEET_ID = "1ee0csLtmGCx9X9Js6Vlgmo0IxfSkZVr_"
+GID = "139417942"  # GID for Detail1 tab
+CSV_URL = f"https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}/export?format=csv&gid={GID}"
+
+# Initialize GSheets connection for saving edits
 conn = st.connection("gsheets", type=GSheetsConnection)
 
-@st.cache_data(ttl=5)  # Sync updates every 5 seconds
+@st.cache_data(ttl=5)
 def load_data():
-    return conn.read(worksheet="Detail1")
+    return pd.read_csv(CSV_URL)
 
-df = load_data()
+try:
+    df = load_data()
+except Exception as e:
+    st.error("❌ Failed to read Google Sheet. Please verify public access settings.")
+    st.info(f"Error detail: {e}")
+    st.stop()
 
 # Ensure required tracking columns exist
 if "Status (Final)" not in df.columns:
