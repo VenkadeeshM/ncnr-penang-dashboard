@@ -9,11 +9,7 @@ st.set_page_config(page_title="NCNR Penang Cloud Dashboard", layout="wide")
 st.title("⚡ NCNR Penang Cloud Operational Dashboard")
 st.caption("🌐 Cloud Hosted | Live Multi-User Sync Enabled")
 
-# Google Sheet Details
-SPREADSHEET_ID = "1ee0csLtmGCx9X9Js6Vlgmo0IxfSkZVr_"
-GID = "139417942"
-
-# Initialize GSheets connection for saving edits
+# Initialize GSheets connection using Streamlit Secrets
 conn = st.connection("gsheets", type=GSheetsConnection)
 
 @st.cache_data(ttl=5)
